@@ -1,0 +1,1 @@
+train = pd.read_csv('../input/personal-key-indicators-of-heart-disease/heart_2020_cleaned.csv')
