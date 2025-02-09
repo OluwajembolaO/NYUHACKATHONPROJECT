@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect } from 'react'
 import './App.css'
 
@@ -163,6 +161,8 @@ function App() {
     kidneyDisease: '',
     skinCancer: '',
   });
+  const [user_risk, setUserRisk] = useState(null);
+
   // Calculate the weighted sum
   function calculateProbability() {
     console.log('Calculating probabilities');
@@ -237,8 +237,9 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(calculateProbability());
-    console.log(formData);
+    const risk = calculateProbability();
+    setUserRisk(risk);
+    console.log(`Your risk of heart disease is ${risk}%`);
   };
 
   return (
@@ -454,7 +455,12 @@ function App() {
         <button type="submit">Submit</button>
       </form>
 
-      
+      {user_risk && (
+        <div className="risk-result">
+          <h2>Your Risk Assessment</h2>
+          <p>Based on your responses, your risk of heart disease is {user_risk}%</p>
+        </div>
+      )}
     </div>
   );
 }
