@@ -166,23 +166,44 @@ function App() {
   // Calculate the weighted sum
   function calculateProbability() {
     console.log('Calculating probabilities');
-    const { baseline_risk, feature_weights } = modelData;
-    let weightedSum = baseline_risk;
+    const { metadata, feature_weights } = modelData;
+    let weightedSum = metadata.baseline_risk;
+
+    // Create a mapping between form fields and model features
+    const fieldToFeatureMap = {
+      smoking: 'Smoking',
+      alcohol: 'AlcoholDrinking',
+      stroke: 'Stroke',
+      difficultyWalking: 'DiffWalking',
+      sex: 'Sex',
+      ageCategory: 'AgeCategory',
+      race: 'Race',
+      diabetic: 'Diabetic',
+      physicalActivity: 'PhysicalActivity',
+      asthma: 'Asthma',
+      kidneyDisease: 'KidneyDisease',
+      skinCancer: 'SkinCancer',
+      bmi: 'BMI',
+      sleepTime: 'SleepTime'
+    };
 
     // Calculate weighted sum for categorical and numeric features
-    for (let feature in formData) {
-      const value = formData[feature];
-      if (feature in feature_weights) {
-        const featureData = feature_weights[feature];
+    for (let field in formData) {
+      let value = formData[field];
+      const featureName = fieldToFeatureMap[field];
+      
+      if (featureName in feature_weights) {
+        const featureData = feature_weights[featureName];
 
         // Handle categorical features
-        if (typeof featureData === 'object' && featureData.values) {
-          weightedSum += featureData.values[value] || 0;  // Default to 0 if value doesn't exist
+        if (featureData.type === 'categorical') {
+          // Capitalize first letter of value
+          value = value.charAt(0).toUpperCase() + value.slice(1);
+          weightedSum += featureData.values[value] || 0;
         }
-
         // Handle numeric features
-        if (typeof featureData === 'object' && featureData.weight) {
-          weightedSum += featureData.weight * value;
+        else if (featureData.type === 'numeric') {
+          weightedSum += featureData.weight * Number(value);
         }
       }
     }
