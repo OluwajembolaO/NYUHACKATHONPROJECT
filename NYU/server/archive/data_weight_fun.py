@@ -3,27 +3,45 @@ from sklearn.linear_model import LogisticRegression
 import numpy as np
 import json
 
-def calculate_risk_weights(data_path='server/filtered_data.csv', output_path='server/heart_disease_model.json'):
+def calculate_risk_weights(data_path='server/archive/HeartDisease.csv', output_path='server/heart_disease_model.json'):
     # Read the CSV file
     df = pd.read_csv(data_path)
     
-    # Define columns
-    categorical_columns = ['Smoking', 'AlcoholDrinking', 'Stroke', 'DiffWalking', 
-                         'Sex', 'AgeCategory', 'Race', 'Diabetic', 'PhysicalActivity',
-                         'Asthma', 'KidneyDisease', 'SkinCancer']
+    # Define columns and their metadata
+    feature_metadata = {
+        'BMI': {'id': 'bmi', 'type': 'numeric'},
+        'Smoking': {'id': 'smoking', 'type': 'categorical'},
+        'AlcoholDrinking': {'id': 'alcohol', 'type': 'categorical'},
+        'Stroke': {'id': 'stroke', 'type': 'categorical'},
+        'DiffWalking': {'id': 'diffWalking', 'type': 'categorical'},
+        'Sex': {'id': 'sex', 'type': 'categorical'},
+        'AgeCategory': {'id': 'age', 'type': 'categorical'},
+        'Race': {'id': 'race', 'type': 'categorical'},
+        'Diabetic': {'id': 'diabetic', 'type': 'categorical'},
+        'PhysicalActivity': {'id': 'physicalActivity', 'type': 'categorical'},
+        'PhysicalHealth': {'id': 'physicalHealth', 'type': 'numeric'},
+        'MentalHealth': {'id': 'mentalHealth', 'type': 'numeric'},
+        'SleepTime': {'id': 'sleepTime', 'type': 'numeric'},
+        'Asthma': {'id': 'asthma', 'type': 'categorical'},
+        'KidneyDisease': {'id': 'kidneyDisease', 'type': 'categorical'},
+        'SkinCancer': {'id': 'skinCancer', 'type': 'categorical'}
+    }
     
-    numeric_columns = ['BMI', 'PhysicalHealth', 'MentalHealth', 'SleepTime', 'GenHealth']
+    # Separate categorical and numeric columns
+    categorical_columns = [col for col, meta in feature_metadata.items() if meta['type'] == 'categorical']
+    numeric_columns = [col for col, meta in feature_metadata.items() if meta['type'] == 'numeric']
     
     # Create dummy variables for categorical columns
     X = pd.get_dummies(df[categorical_columns], prefix=categorical_columns)
     
-    # Convert target variable to numeric
-    y = (df['HeartDisease'] == 'Yes').astype(int)
-    
-    # Add numeric columns
+    # Add numeric columns to X with their original names
     for col in numeric_columns:
         if col in df.columns:
+            # Use the same name as in the original dataframe
             X[col] = df[col]
+    
+    # Convert target variable to numeric
+    y = (df['HeartDisease'] == 'Yes').astype(int)
     
     # Fit logistic regression
     model = LogisticRegression(max_iter=1000)
@@ -33,36 +51,42 @@ def calculate_risk_weights(data_path='server/filtered_data.csv', output_path='se
     model_data = {
         "metadata": {
             "model_type": "logistic_regression",
-            "categorical_features": categorical_columns,
-            "numeric_features": numeric_columns,
             "baseline_risk": float(model.intercept_[0])
         },
-        "feature_weights": {}
+        "features": []
     }
     
-    # Store possible values for each categorical feature
-    for column in categorical_columns:
-        unique_values = df[column].unique()
-        weights = {}
-        for value in unique_values:
-            feature_name = f"{column}_{value}"
-            if feature_name in X.columns:
-                weight_index = list(X.columns).index(feature_name)
-                weights[value] = float(model.coef_[0][weight_index])
-        
-        model_data["feature_weights"][column] = {
-            "type": "categorical",
-            "values": weights
-        }
+    # Get all column names and their corresponding weights
+    feature_weights = dict(zip(X.columns, model.coef_[0]))
     
-    # Store numeric feature weights
-    for column in numeric_columns:
-        if column in X.columns:
-            weight_index = list(X.columns).index(column)
-            model_data["feature_weights"][column] = {
-                "type": "numeric",
-                "weight": float(model.coef_[0][weight_index])
-            }
+    # Store weights for each feature
+    for column, meta in feature_metadata.items():
+        feature_info = {
+            "id": meta['id'],
+            "name": column,
+            "type": meta['type']
+        }
+        
+        if meta['type'] == 'categorical':
+            # Get all dummy columns for this categorical feature
+            dummy_cols = [col for col in X.columns if col.startswith(f"{column}_")]
+            options = []
+            for dummy_col in dummy_cols:
+                value = dummy_col.split(f"{column}_")[1]
+                options.append({
+                    "value": value,
+                    "weight": float(feature_weights[dummy_col])
+                })
+            feature_info["options"] = options
+        else:
+            # For numeric features, use the original column name
+            try:
+                feature_info["weight"] = float(feature_weights[column])
+            except KeyError:
+                print(f"Warning: Could not find weight for {column}. Setting weight to 0.")
+                feature_info["weight"] = 0.0
+        
+        model_data["features"].append(feature_info)
     
     # Save to JSON file
     with open(output_path, 'w') as f:
@@ -85,15 +109,19 @@ def calculate_absolute_risk(user_data, model_data):
     log_odds = model_data["metadata"]["baseline_risk"]
     
     # Add contribution from each feature
-    for feature, value in user_data.items():
-        if feature in model_data["feature_weights"]:
-            feature_data = model_data["feature_weights"][feature]
+    for feature in model_data["features"]:
+        if feature["id"] in user_data:
+            value = user_data[feature["id"]]
             
-            if feature_data["type"] == "categorical":
-                if value in feature_data["values"]:
-                    log_odds += feature_data["values"][value]
-            elif feature_data["type"] == "numeric":
-                log_odds += feature_data["weight"] * float(value)
+            if feature["type"] == "categorical":
+                # Find matching option and add its weight
+                for option in feature["options"]:
+                    if option["value"] == value:
+                        log_odds += option["weight"]
+                        break
+            else:
+                # For numeric features, multiply value by weight
+                log_odds += feature["weight"] * float(value)
     
     # Convert to probability
     probability = 1 / (1 + np.exp(-log_odds))
@@ -102,28 +130,5 @@ def calculate_absolute_risk(user_data, model_data):
 if __name__ == "__main__":
     # Generate and save model data
     model_data = calculate_risk_weights()
-    
-    # Example usage
-    example_user = {
-        'AgeCategory': '70-74',
-        'Sex': 'Male',
-        'Smoking': 'Yes',
-        'AlcoholDrinking': 'No',
-        'Stroke': 'No',
-        'DiffWalking': 'No',
-        'Race': 'White',
-        'Diabetic': 'No',
-        'PhysicalActivity': 'Yes',
-        'Asthma': 'No',
-        'KidneyDisease': 'No',
-        'SkinCancer': 'No',
-        'BMI': 25.0,
-        'PhysicalHealth': 0,
-        'MentalHealth': 0,
-        'SleepTime': 7,
-        'GenHealth': 'Good'
-    }
-    
-    risk = calculate_absolute_risk(example_user, model_data)
-    print(f"\nAbsolute probability of heart disease: {risk:.3%}")
+    print("Model weights have been saved to heart_disease_model.json")
 
