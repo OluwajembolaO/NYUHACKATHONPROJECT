@@ -1,42 +1,99 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* App.css */
+
+/* Body Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #EEE2DC; /* Light Creamy Beige */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 250vh;
+  flex-direction: column;
+}
+
+/* Header Styles */
+h1.title {
   text-align: center;
+  color: #123C69; /* Dark Navy Blue */
+  font-size: 3rem;
+  margin-bottom: 30px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Form Container */
+form {
+  background-color: #FFFFFF; /* White Background */
+  padding: 30px;
+  border-radius: 10px;  
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;   
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Form Fields */
+div {
+  margin-bottom: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Labels */
+label {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  color: #123C69; /* Dark Navy Blue */
 }
 
-.card {
-  padding: 2em;
+/* Select and Input Fields */
+select,
+input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #BAB2B5; /* Light Grayish Purple */
+  border-radius: 6px;
+  font-size: 1.1rem;
+  background-color: #EDC7B7; /* Light Beige */
+  color: #123C69; /* Dark Navy Blue Text */
 }
 
-.read-the-docs {
-  color: #888;
+/* Button Styles */
+button {
+  width: 100%;
+  padding: 14px;
+  background-color: #AC3B61; /* Deep Rose Pink */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-top: 20px;
 }
+
+button:hover {
+  background-color: #123C69; /* Dark Navy Blue */
+}
+
+/* Additional Styles for Select and Input Fields */
+select option,
+input[type="number"] {
+  color: #123C69; /* Dark Navy Blue */
+}
+
+/* Form Section Layout */
+form div {
+  display: flex;
+  flex-direction: column;
+}
+
+form div label,
+form div select,
+form div input {
+  margin-bottom: 10px;
+}
+
+form button {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
