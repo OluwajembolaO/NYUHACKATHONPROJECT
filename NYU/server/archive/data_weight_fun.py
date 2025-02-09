@@ -3,7 +3,7 @@ from sklearn.linear_model import LogisticRegression
 import numpy as np
 import json
 
-def calculate_risk_weights(data_path='server/filtered_data.csv', output_path='server/heart_disease_model.json'):
+def calculate_risk_weights(data_path='server/archive/HeartDisease.csv', output_path='server/heart_disease_model.json'):
     # Read the CSV file
     df = pd.read_csv(data_path)
     
