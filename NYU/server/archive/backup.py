@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 import numpy as np
 
-def calculate_risk_weights(data_path='server/filtered_data.csv'):
+def calculate_risk_weights(data_path='./filtered_data.csv'):
     # Read the CSV file
     df = pd.read_csv(data_path)
     
@@ -43,18 +43,23 @@ def calculate_risk_weights(data_path='server/filtered_data.csv'):
 
 if __name__ == "__main__":
     weights = calculate_risk_weights()
-    print("\nRisk Factor Weights:")
-    # Group weights by category
+    
+    # Create a dictionary to store the categorized weights
     categories = {}
     for factor, weight in weights.items():
-        category = factor.split('_')[0]
+        category = factor.split('_')[0]  # Get the category (first part before the underscore)
+        value = factor.split('_')[1] if len(factor.split('_')) > 1 else 'value'  # Get the value (second part)
+
+        # Add the category to the dictionary if it's not already present
         if category not in categories:
-            categories[category] = []
-        categories[category].append((factor, weight))
+            categories[category] = {}
+        
+        # Store the value and its corresponding weight in the category
+        categories[category][value] = weight
     
-    # Print weights grouped by category
-    for category, values in categories.items():
-        print(f"\n{category}:")
-        for factor, weight in sorted(values, key=lambda x: abs(x[1]), reverse=True):
-            print(f"  {factor.split('_', 1)[1] if '_' in factor else 'value'}: {weight:.3f}")
+    # Now, the categories dictionary contains the data in the structure: 
+    # {'category': {'value': weight, ...}, ...}
+    
+    # If you want to check the dictionary structure
+    print(categories)
 
