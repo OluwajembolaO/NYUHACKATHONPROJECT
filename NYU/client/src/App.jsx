@@ -247,6 +247,7 @@ function App() {
           >
             <option value="">Select</option>
             <option value="asian">Asian</option>
+            <option value="american indian/alaska native"> American Indian/Alaska Native</option>
             <option value="black">Black</option>
             <option value="hispanic">Hispanic</option>
             <option value="white">White</option>
