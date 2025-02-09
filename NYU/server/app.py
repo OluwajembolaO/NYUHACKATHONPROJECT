@@ -4,6 +4,7 @@ app = Flask(__name__)
 
 @app.route('/getPercentage', methods=['POST'])
 def getPercentage():
+    print ("Received request")    
     # Get the data from the request
     data = request.get_json()
     
