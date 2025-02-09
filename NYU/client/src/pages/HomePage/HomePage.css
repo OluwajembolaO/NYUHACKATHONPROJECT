@@ -13,12 +13,13 @@ body {
     width: 90%;
     max-width: 1200px;
     margin: auto;
-    padding: 40px 0;
+    padding: 25px 0;
   }
   
   /* Hero Section */
   .hero {
-    padding: 80px 0;
+
+    padding: 25px 0;
   }
   
   .hero-title {
@@ -61,8 +62,8 @@ body {
   
   /* Features Section */
   .features {
-    margin: 50px 0;
-    padding: 40px 0;
+    margin: 35px 0;
+    padding: 25px 0;
   }
   
   .section-title {
@@ -77,14 +78,14 @@ body {
   .feature-grid {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: wrap;
-    margin-top: 30px;
+    margin-top: 15px;
   }
   
   .feature-item {
     width: 300px;
-    padding: 20px;
+    padding: 15px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     text-align: center;
@@ -99,8 +100,8 @@ body {
   
   /* How It Works Section */
   .how-it-works {
-    margin: 50px 0;
-    padding: 40px 0;
+    margin: 35px 0;
+    padding: 25px 0;
   }
   
   .steps-list {
@@ -110,8 +111,8 @@ body {
   
   .step-item {
     font-size: 1.4rem;
-    margin: 15px 0;
-    padding: 15px;
+    margin: 10px 0;
+    padding: 10px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     backdrop-filter: blur(10px);
@@ -131,14 +132,14 @@ body {
   
   /* Team Section */
   .team {
-    margin: 50px 0;
-    padding: 40px 0;
+    margin: 20px 0;
+    padding: 15px 0;
   }
   
   .team-grid {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: wrap;
     margin-top: 30px;
   }
@@ -175,8 +176,8 @@ body {
   
   /* Call To Action */
   .cta-section {
-    margin-top: 50px;
-    padding: 50px 0;
+    margin-top: 15px;
+    padding: 15px 0;
     background: linear-gradient(45deg, #ff416c, #ff4b2b);
     border-radius: 15px;
     text-align: center;
