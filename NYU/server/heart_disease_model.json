@@ -1,138 +1,268 @@
 {
   "metadata": {
     "model_type": "logistic_regression",
-    "categorical_features": [
-      "Smoking",
-      "AlcoholDrinking",
-      "Stroke",
-      "DiffWalking",
-      "Sex",
-      "AgeCategory",
-      "Race",
-      "Diabetic",
-      "PhysicalActivity",
-      "Asthma",
-      "KidneyDisease",
-      "SkinCancer"
-    ],
-    "numeric_features": [
-      "BMI",
-      "PhysicalHealth",
-      "MentalHealth",
-      "SleepTime",
-      "GenHealth"
-    ],
     "baseline_risk": -2.237784032021903
   },
-  "feature_weights": {
-    "Smoking": {
-      "type": "categorical",
-      "values": {
-        "Yes": 0.20337573212249366,
-        "No": -0.21044635257519112
-      }
-    },
-    "AlcoholDrinking": {
-      "type": "categorical",
-      "values": {
-        "No": 0.047202007184353315,
-        "Yes": -0.054272627637044206
-      }
-    },
-    "Stroke": {
-      "type": "categorical",
-      "values": {
-        "No": -0.5539917265636719,
-        "Yes": 0.5469211061109664
-      }
-    },
-    "DiffWalking": {
-      "type": "categorical",
-      "values": {
-        "No": -0.37684008838536615,
-        "Yes": 0.3697694679327166
-      }
-    },
-    "Sex": {
-      "type": "categorical",
-      "values": {
-        "Female": -0.08999684548929685,
-        "Male": 0.0829262250365982
-      }
-    },
-    "AgeCategory": {
-      "type": "categorical",
-      "values": {
-        "55-59": -0.10233583263990613,
-        "80 or older": 0.6133858909929535,
-        "65-69": 0.6246891916099535,
-        "75-79": 0.9208797699200035,
-        "40-44": -0.711619878006496,
-        "70-74": 0.7096279138740962,
-        "60-64": 0.43319262615643267,
-        "50-54": -0.49285982295875214,
-        "45-49": -0.8763721383298052,
-        "18-24": -0.27930565489593406,
-        "35-39": -0.36908681598784016,
-        "30-34": -0.2896283205700656,
-        "25-29": -0.1876375496173672
-      }
-    },
-    "Race": {
-      "type": "categorical",
-      "values": {
-        "White": 0.5298019440211238,
-        "Black": -0.1303107208169778,
-        "Asian": -0.20451842278173998,
-        "American Indian/Alaskan Native": -0.2505751572089424,
-        "Other": 0.2614216353539811,
-        "Hispanic": -0.21288989902014643
-      }
-    },
-    "Diabetic": {
-      "type": "categorical",
-      "values": {
-        "Yes": 0.7577631559024847,
-        "No": 0.03590314284586798,
-        "No, borderline diabetes": -0.6958684521274043,
-        "Yes (during pregnancy)": -0.10486846707357611
-      }
-    },
-    "PhysicalActivity": {
-      "type": "categorical",
-      "values": {
-        "Yes": -0.132275888315965,
-        "No": 0.12520526786326594
-      }
-    },
-    "Asthma": {
-      "type": "categorical",
-      "values": {
-        "Yes": 0.04284975429317735,
-        "No": -0.04992037474586859
-      }
-    },
-    "KidneyDisease": {
-      "type": "categorical",
-      "values": {
-        "No": -0.37564436006632484,
-        "Yes": 0.36857373961365
-      }
-    },
-    "SkinCancer": {
-      "type": "categorical",
-      "values": {
-        "Yes": 0.047838950742418486,
-        "No": -0.0549095711951043
-      }
-    },
-    "BMI": {
+  "features": [
+    {
+      "id": "bmi",
+      "name": "BMI",
       "type": "numeric",
       "weight": 0.003444954268588153
     },
-    "SleepTime": {
+    {
+      "id": "smoking",
+      "name": "Smoking",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "No",
+          "weight": -0.21044635257519112
+        },
+        {
+          "value": "Yes",
+          "weight": 0.20337573212249366
+        }
+      ]
+    },
+    {
+      "id": "alcohol",
+      "name": "AlcoholDrinking",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "No",
+          "weight": 0.047202007184353315
+        },
+        {
+          "value": "Yes",
+          "weight": -0.054272627637044206
+        }
+      ]
+    },
+    {
+      "id": "stroke",
+      "name": "Stroke",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "No",
+          "weight": -0.5539917265636719
+        },
+        {
+          "value": "Yes",
+          "weight": 0.5469211061109664
+        }
+      ]
+    },
+    {
+      "id": "diffWalking",
+      "name": "DiffWalking",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "No",
+          "weight": -0.37684008838536615
+        },
+        {
+          "value": "Yes",
+          "weight": 0.3697694679327166
+        }
+      ]
+    },
+    {
+      "id": "sex",
+      "name": "Sex",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "Female",
+          "weight": -0.08999684548929685
+        },
+        {
+          "value": "Male",
+          "weight": 0.0829262250365982
+        }
+      ]
+    },
+    {
+      "id": "age",
+      "name": "AgeCategory",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "18-24",
+          "weight": -0.27930565489593406
+        },
+        {
+          "value": "25-29",
+          "weight": -0.1876375496173672
+        },
+        {
+          "value": "30-34",
+          "weight": -0.2896283205700656
+        },
+        {
+          "value": "35-39",
+          "weight": -0.36908681598784016
+        },
+        {
+          "value": "40-44",
+          "weight": -0.711619878006496
+        },
+        {
+          "value": "45-49",
+          "weight": -0.8763721383298052
+        },
+        {
+          "value": "50-54",
+          "weight": -0.49285982295875214
+        },
+        {
+          "value": "55-59",
+          "weight": -0.10233583263990613
+        },
+        {
+          "value": "60-64",
+          "weight": 0.43319262615643267
+        },
+        {
+          "value": "65-69",
+          "weight": 0.6246891916099535
+        },
+        {
+          "value": "70-74",
+          "weight": 0.7096279138740962
+        },
+        {
+          "value": "75-79",
+          "weight": 0.9208797699200035
+        },
+        {
+          "value": "80 or older",
+          "weight": 0.6133858909929535
+        }
+      ]
+    },
+    {
+      "id": "race",
+      "name": "Race",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "American Indian/Alaskan Native",
+          "weight": -0.2505751572089424
+        },
+        {
+          "value": "Asian",
+          "weight": -0.20451842278173998
+        },
+        {
+          "value": "Black",
+          "weight": -0.1303107208169778
+        },
+        {
+          "value": "Hispanic",
+          "weight": -0.21288989902014643
+        },
+        {
+          "value": "Other",
+          "weight": 0.2614216353539811
+        },
+        {
+          "value": "White",
+          "weight": 0.5298019440211238
+        }
+      ]
+    },
+    {
+      "id": "diabetic",
+      "name": "Diabetic",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "No",
+          "weight": 0.03590314284586798
+        },
+        {
+          "value": "No, borderline diabetes",
+          "weight": -0.6958684521274043
+        },
+        {
+          "value": "Yes",
+          "weight": 0.7577631559024847
+        },
+        {
+          "value": "Yes (during pregnancy)",
+          "weight": -0.10486846707357611
+        }
+      ]
+    },
+    {
+      "id": "physicalActivity",
+      "name": "PhysicalActivity",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "No",
+          "weight": 0.12520526786326594
+        },
+        {
+          "value": "Yes",
+          "weight": -0.132275888315965
+        }
+      ]
+    },
+    {
+      "id": "sleepTime",
+      "name": "SleepTime",
       "type": "numeric",
       "weight": 0.023616495560605116
+    },
+    {
+      "id": "asthma",
+      "name": "Asthma",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "No",
+          "weight": -0.04992037474586859
+        },
+        {
+          "value": "Yes",
+          "weight": 0.04284975429317735
+        }
+      ]
+    },
+    {
+      "id": "kidneyDisease",
+      "name": "KidneyDisease",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "No",
+          "weight": -0.37564436006632484
+        },
+        {
+          "value": "Yes",
+          "weight": 0.36857373961365
+        }
+      ]
+    },
+    {
+      "id": "skinCancer",
+      "name": "SkinCancer",
+      "type": "categorical",
+      "options": [
+        {
+          "value": "No",
+          "weight": -0.0549095711951043
+        },
+        {
+          "value": "Yes",
+          "weight": 0.047838950742418486
+        }
+      ]
     }
-  }
+  ]
 }
