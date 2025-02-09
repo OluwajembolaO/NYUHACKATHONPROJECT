@@ -1,7 +1,152 @@
-import { useState } from 'react'
+
+
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
+  const modelData = {
+    metadata: {
+      model_type: "logistic_regression",
+      categorical_features: [
+        "Smoking",
+        "AlcoholDrinking",
+        "Stroke",
+        "DiffWalking",
+        "Sex",
+        "AgeCategory",
+        "Race",
+        "Diabetic",
+        "PhysicalActivity",
+        "Asthma",
+        "KidneyDisease",
+        "SkinCancer"
+      ],
+      numeric_features: [
+        "BMI",
+        "PhysicalHealth",
+        "MentalHealth",
+        "SleepTime",
+        "GenHealth"
+      ],
+      baseline_risk: -2.237784032021903
+    },
+    feature_weights: {
+      Smoking: {
+        type: "categorical",
+        values: {
+          Yes: 0.20337573212249366,
+          No: -0.21044635257519112
+        }
+      },
+      AlcoholDrinking: {
+        type: "categorical",
+        values: {
+          No: 0.047202007184353315,
+          Yes: -0.054272627637044206
+        }
+      },
+      Stroke: {
+        type: "categorical",
+        values: {
+          No: -0.5539917265636719,
+          Yes: 0.5469211061109664
+        }
+      },
+      DiffWalking: {
+        type: "categorical",
+        values: {
+          No: -0.37684008838536615,
+          Yes: 0.3697694679327166
+        }
+      },
+      Sex: {
+        type: "categorical",
+        values: {
+          Female: -0.08999684548929685,
+          Male: 0.0829262250365982
+        }
+      },
+      AgeCategory: {
+        type: "categorical",
+        values: {
+          "55-59": -0.10233583263990613,
+          "80 or older": 0.6133858909929535,
+          "65-69": 0.6246891916099535,
+          "75-79": 0.9208797699200035,
+          "40-44": -0.711619878006496,
+          "70-74": 0.7096279138740962,
+          "60-64": 0.43319262615643267,
+          "50-54": -0.49285982295875214,
+          "45-49": -0.8763721383298052,
+          "18-24": -0.27930565489593406,
+          "35-39": -0.36908681598784016,
+          "30-34": -0.2896283205700656,
+          "25-29": -0.1876375496173672
+        }
+      },
+      Race: {
+        type: "categorical",
+        values: {
+          White: 0.5298019440211238,
+          Black: -0.1303107208169778,
+          Asian: -0.20451842278173998,
+          "American Indian/Alaskan Native": -0.2505751572089424,
+          Other: 0.2614216353539811,
+          Hispanic: -0.21288989902014643
+        }
+      },
+      Diabetic: {
+        type: "categorical",
+        values: {
+          Yes: 0.7577631559024847,
+          No: 0.03590314284586798,
+          "No, borderline diabetes": -0.6958684521274043,
+          "Yes (during pregnancy)": -0.10486846707357611
+        }
+      },
+      PhysicalActivity: {
+        type: "categorical",
+        values: {
+          Yes: -0.132275888315965,
+          No: 0.12520526786326594
+        }
+      },
+      Asthma: {
+        type: "categorical",
+        values: {
+          Yes: 0.04284975429317735,
+          No: -0.04992037474586859
+        }
+      },
+      KidneyDisease: {
+        type: "categorical",
+        values: {
+          No: -0.37564436006632484,
+          Yes: 0.36857373961365
+        }
+      },
+      SkinCancer: {
+        type: "categorical",
+        values: {
+          Yes: 0.047838950742418486,
+          No: -0.0549095711951043
+        }
+      },
+      BMI: {
+        type: "numeric",
+        weight: 0.003444954268588153
+      },
+      SleepTime: {
+        type: "numeric",
+        weight: 0.023616495560605116
+      }
+    }
+  };
+
+  // You can now use the `modelData` object in your JavaScript code to access the metadata and feature weights.
+
+  const [weightsData, setWeightsData] = useState(null);
+  const [probability, setProbability] = useState(null);
   const [formData, setFormData] = useState({
     bmi: '',
     smoking: '',
@@ -18,6 +163,55 @@ function App() {
     kidneyDisease: '',
     skinCancer: '',
   });
+  // Calculate the weighted sum
+  function calculateProbability() {
+    console.log('Calculating probabilities');
+    const { baseline_risk, feature_weights } = modelData;
+    let weightedSum = baseline_risk;
+
+    // Calculate weighted sum for categorical and numeric features
+    for (let feature in formData) {
+      const value = formData[feature];
+      if (feature in feature_weights) {
+        const featureData = feature_weights[feature];
+
+        // Handle categorical features
+        if (typeof featureData === 'object' && featureData.values) {
+          weightedSum += featureData.values[value] || 0;  // Default to 0 if value doesn't exist
+        }
+
+        // Handle numeric features
+        if (typeof featureData === 'object' && featureData.weight) {
+          weightedSum += featureData.weight * value;
+        }
+      }
+    }
+
+    // Apply the logistic regression formula (sigmoid function)
+    const probability = 1 / (1 + Math.exp(-weightedSum));
+
+    // Convert to percentage
+    return (probability * 100).toFixed(2);
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+    console.log('Fetching data...');
+      try {
+        const response = await fetch('/heart_disease_model.json');  // Correct path
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        console.log(data);  // Log the data to the console
+        setWeightsData(data);
+      } catch (error) {
+        console.error('Error loading weights:', error);  // Log any errors
+      }
+    };
+
+    fetchData();  // Call the function to fetch data
+  }, []);
 
 
   
@@ -43,6 +237,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(calculateProbability());
     console.log(formData);
   };
 
